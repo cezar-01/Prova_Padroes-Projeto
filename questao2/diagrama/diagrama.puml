@@ -1,0 +1,112 @@
+@startuml questao2-abstract-factory
+title Questão 2 — Matrículas Internacionais (Abstract Factory)
+skinparam classAttributeIconSize 0
+
+interface FabricaArtefatosMatricula <<AbstractFactory>> {
+  + criarDocumentoFiscal(valor: double): DocumentoFiscal
+  + criarPagamento(valor: double): Pagamento
+  + criarComprovante(nomeAluno: String, identificacaoAluno: String, curso: String): ComprovanteMatricula
+}
+
+class FabricaBrasil <<ConcreteFactory>> {
+  + criarDocumentoFiscal(valor: double): DocumentoFiscal
+  + criarPagamento(valor: double): Pagamento
+  + criarComprovante(nomeAluno: String, identificacaoAluno: String, curso: String): ComprovanteMatricula
+}
+
+class FabricaChile <<ConcreteFactory>> {
+  + criarDocumentoFiscal(valor: double): DocumentoFiscal
+  + criarPagamento(valor: double): Pagamento
+  + criarComprovante(nomeAluno: String, identificacaoAluno: String, curso: String): ComprovanteMatricula
+}
+
+interface DocumentoFiscal <<AbstractProduct>> {
+  + descricao(): String
+}
+interface Pagamento <<AbstractProduct>> {
+  + descricao(): String
+}
+interface ComprovanteMatricula <<AbstractProduct>> {
+  + descricao(): String
+}
+
+class NfsBrasil <<ConcreteProduct>> {
+  - valor: double
+  + NfsBrasil(valor: double)
+  + descricao(): String
+}
+class PagamentoPix <<ConcreteProduct>> {
+  - valor: double
+  + PagamentoPix(valor: double)
+  + descricao(): String
+}
+class ComprovanteBrasil <<ConcreteProduct>> {
+  - nomeAluno: String
+  - cpf: String
+  - curso: String
+  + ComprovanteBrasil(nomeAluno: String, cpf: String, curso: String)
+  + descricao(): String
+}
+
+class BoletaElectronicaChile <<ConcreteProduct>> {
+  - valor: double
+  + BoletaElectronicaChile(valor: double)
+  + descricao(): String
+}
+class PagamentoWebpay <<ConcreteProduct>> {
+  - valor: double
+  + PagamentoWebpay(valor: double)
+  + descricao(): String
+}
+class ComprovanteChile <<ConcreteProduct>> {
+  - nomeAluno: String
+  - rut: String
+  - curso: String
+  + ComprovanteChile(nomeAluno: String, rut: String, curso: String)
+  + descricao(): String
+}
+
+class Matricula <<Client>> {
+  - fabrica: FabricaArtefatosMatricula
+  - nomeAluno: String
+  - identificacaoAluno: String
+  - curso: String
+  - valor: double
+  - documentoFiscal: DocumentoFiscal
+  - pagamento: Pagamento
+  - comprovante: ComprovanteMatricula
+  + Matricula(fabrica: FabricaArtefatosMatricula, nomeAluno: String, identificacaoAluno: String, curso: String, valor: double)
+  + confirmar(): void
+  - imprimirRelatorio(): void
+}
+
+class Main {
+  + {static} main(args: String[]): void
+}
+
+FabricaArtefatosMatricula <|.. FabricaBrasil
+FabricaArtefatosMatricula <|.. FabricaChile
+
+DocumentoFiscal <|.. NfsBrasil
+DocumentoFiscal <|.. BoletaElectronicaChile
+Pagamento <|.. PagamentoPix
+Pagamento <|.. PagamentoWebpay
+ComprovanteMatricula <|.. ComprovanteBrasil
+ComprovanteMatricula <|.. ComprovanteChile
+
+FabricaBrasil ..> NfsBrasil : <<create>>
+FabricaBrasil ..> PagamentoPix : <<create>>
+FabricaBrasil ..> ComprovanteBrasil : <<create>>
+FabricaChile ..> BoletaElectronicaChile : <<create>>
+FabricaChile ..> PagamentoWebpay : <<create>>
+FabricaChile ..> ComprovanteChile : <<create>>
+
+Matricula o--> "1" FabricaArtefatosMatricula
+Matricula --> DocumentoFiscal
+Matricula --> Pagamento
+Matricula --> ComprovanteMatricula
+
+Main ..> Matricula
+Main ..> FabricaBrasil
+Main ..> FabricaChile
+@enduml
