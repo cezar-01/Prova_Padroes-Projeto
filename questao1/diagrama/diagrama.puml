@@ -1,0 +1,73 @@
+@startuml questao1-factory-method
+title Questão 1 — Emissão de Passagens (Factory Method)
+skinparam classAttributeIconSize 0
+
+abstract class EmissorPassagem <<Creator>> {
+  # {abstract} criarPassagem(nomePassageiro: String, valorTarifa: double): Passagem
+  + emitir(nomePassageiro: String, valorTarifa: double): Passagem {final}
+}
+note right of EmissorPassagem::emitir
+  passagem = criarPassagem(...)
+  passagem.calcularTaxaEmbarque()
+  passagem.imprimirResumo()
+end note
+
+class EmissorPassagemAerea <<ConcreteCreator>> {
+  # criarPassagem(nomePassageiro: String, valorTarifa: double): Passagem
+}
+class EmissorPassagemRodoviaria <<ConcreteCreator>> {
+  # criarPassagem(nomePassageiro: String, valorTarifa: double): Passagem
+}
+class EmissorPassagemFerroviaria <<ConcreteCreator>> {
+  # criarPassagem(nomePassageiro: String, valorTarifa: double): Passagem
+}
+
+abstract class Passagem <<Product>> {
+  - nomePassageiro: String
+  - valorTarifa: double
+  - taxaEmbarque: double
+  # Passagem(nomePassageiro: String, valorTarifa: double)
+  + {abstract} getModal(): String
+  # {abstract} getPercentualTaxaEmbarque(): double
+  + {abstract} getDocumentosExigidos(): List<String>
+  + calcularTaxaEmbarque(): double
+  + imprimirResumo(): void
+  + getNomePassageiro(): String
+  + getValorTarifa(): double
+}
+
+class PassagemAerea <<ConcreteProduct>> {
+  + getModal(): String
+  # getPercentualTaxaEmbarque(): double
+  + getDocumentosExigidos(): List<String>
+}
+class PassagemRodoviaria <<ConcreteProduct>> {
+  + getModal(): String
+  # getPercentualTaxaEmbarque(): double
+  + getDocumentosExigidos(): List<String>
+}
+class PassagemFerroviaria <<ConcreteProduct>> {
+  + getModal(): String
+  # getPercentualTaxaEmbarque(): double
+  + getDocumentosExigidos(): List<String>
+}
+
+class Main {
+  + {static} main(args: String[]): void
+}
+
+EmissorPassagem <|-- EmissorPassagemAerea
+EmissorPassagem <|-- EmissorPassagemRodoviaria
+EmissorPassagem <|-- EmissorPassagemFerroviaria
+
+Passagem <|-- PassagemAerea
+Passagem <|-- PassagemRodoviaria
+Passagem <|-- PassagemFerroviaria
+
+EmissorPassagem ..> Passagem : usa
+EmissorPassagemAerea ..> PassagemAerea : <<create>>
+EmissorPassagemRodoviaria ..> PassagemRodoviaria : <<create>>
+EmissorPassagemFerroviaria ..> PassagemFerroviaria : <<create>>
+
+Main ..> EmissorPassagem
+@enduml
